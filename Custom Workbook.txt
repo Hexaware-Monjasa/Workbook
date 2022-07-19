@@ -1,0 +1,40 @@
+DeviceNetworkEvents
+//workbook showing differnt types of actions which we are receveing through Devicenetworkevents
+| summarize count() by ActionType
+| render  piechart 
+
+
+EmailUrlInfo
+//workbook to showcase the url domains which are been involed mostly in the emails.
+| summarize count() by UrlDomain
+
+EmailPostDeliveryEvents
+//workbook to showcase key highlights of phising and malware activity logs recevng from MDE
+| summarize count() by ActionType,Action
+| render  barchart 
+
+IdentityLogonEvents
+//Workbook showcasing account password changed & account lockout changed
+| where ActionType contains "LogonFailed"
+| summarize count() by LogonType, Protocol, FailureReason
+
+IdentityLogonEvents
+//Account password expired
+| where ActionType == "LogonFailed"
+| where FailureReason == "PasswordExpired"
+| project Application,Protocol,AccountName,AccountDomain,AccountDisplayName,DeviceName, IPAddress,DestinationDeviceName,DestinationIPAddress
+
+CloudAppEvents
+//workbook showing for Dlp rule match action Events
+| where ActionType contains "DlpRuleMatch"
+| summarize count() by ObjectType,Application
+
+CloudAppEvents
+//workbook showing FileCopiedToNetworkShare detected events
+| where ActionType contains "FileCopiedToNetworkShare"
+| project AccountDisplayName,Application
+
+CloudAppEvents
+//workbook showing RemovableMediaMount  on detected
+| where ActionType contains "RemovableMediaUnmount"
+| project AccountDisplayName,Application
